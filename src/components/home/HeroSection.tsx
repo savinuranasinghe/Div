@@ -1,7 +1,9 @@
+// src/components/home/HeroSection.tsx (Updated)
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import DNAStreamsBackground from "./DNAStreamsBackground";
 
 const HeroSection: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -31,9 +33,19 @@ const HeroSection: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-20">
-      {/* Animated Background */}
+      {/* DNA Streams Background Animation */}
+      <DNAStreamsBackground />
+      
+      {/* Static Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-neon-blue/5 to-transparent opacity-30"></div>
         <div className="absolute top-1/4 left-1/4 w-48 md:w-96 h-48 md:h-96 bg-neon-blue/5 rounded-full blur-3xl animate-pulse"></div>
@@ -53,7 +65,6 @@ const HeroSection: React.FC = () => {
             lineHeight: "1.1"
           }}
         >
-          {/* Add your hero title text here */}
           <span className="text-neon-blue block drop-shadow-lg">
             Beyond Boundaries
           </span>
@@ -68,23 +79,21 @@ const HeroSection: React.FC = () => {
         >
           <div className="flex flex-col sm:flex-row gap-4 items-center">
             <Button 
-              asChild 
+              onClick={() => scrollToSection('services')}
               className="bg-gradient-to-r from-neon-blue to-electric-violet text-white hover:from-electric-violet hover:to-neon-blue transition-all duration-300 transform hover:scale-105"
             >
-              <Link to="#services" className="flex items-center gap-2">
+              <span className="flex items-center gap-2">
                 Explore Our Services
                 <ArrowRight className="w-5 h-5" />
-              </Link>
+              </span>
             </Button>
             
             <Button 
-              asChild 
+              onClick={() => scrollToSection('contact')}
               variant="outline" 
               className="border-neon-blue text-neon-blue hover:bg-neon-blue/10"
             >
-              <Link to="#contact">
-                Get In Touch
-              </Link>
+              Get In Touch
             </Button>
           </div>
         </div>

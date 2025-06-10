@@ -763,3 +763,126 @@
     color: white !important;
   }
 }
+/* Add these styles to your src/index.css file */
+
+/* DNA Streams specific optimizations */
+@media (max-width: 768px) {
+  /* Reduce DNA animation complexity on mobile */
+  .dna-streams-canvas {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  
+  /* Optimize mobile performance */
+  canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+  }
+}
+
+/* Enhance the hero section for DNA streams */
+.hero-with-dna {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-with-dna::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 255, 255, 0.02) 0%,
+    rgba(138, 43, 226, 0.02) 50%,
+    rgba(255, 46, 245, 0.01) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Text glow enhancement for readability over DNA streams */
+.hero-title-enhanced {
+  text-shadow: 
+    0 0 10px rgba(0, 255, 255, 0.3),
+    0 0 20px rgba(0, 255, 255, 0.2),
+    0 0 30px rgba(0, 255, 255, 0.1);
+}
+
+/* DNA stream glow keyframes */
+@keyframes dna-glow {
+  0% {
+    filter: drop-shadow(0 0 5px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor);
+  }
+  100% {
+    filter: drop-shadow(0 0 5px currentColor);
+  }
+}
+
+.dna-glow-effect {
+  animation: dna-glow 3s ease-in-out infinite;
+}
+
+/* Performance optimizations for canvas animations */
+.dna-canvas-container {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Ensure smooth animations across devices */
+@media (prefers-reduced-motion: reduce) {
+  .dna-streams-canvas {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  
+  canvas {
+    display: none;
+  }
+  
+  /* Provide static fallback */
+  .hero-section-fallback {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 255, 255, 0.1) 0%,
+      rgba(138, 43, 226, 0.1) 50%,
+      rgba(255, 46, 245, 0.1) 100%
+    );
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .dna-streams-canvas {
+    opacity: 0.3 !important;
+    mix-blend-mode: normal !important;
+  }
+}
+
+/* GPU acceleration for smooth performance */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dna-streams-canvas {
+    opacity: 0.5;
+  }
+}
+
+/* Ultra-wide screen optimizations */
+@media (min-width: 1920px) {
+  .dna-streams-canvas {
+    opacity: 0.7;
+  }
+}
