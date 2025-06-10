@@ -6,83 +6,83 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%; /* Pure Black */
-    --foreground: 0 0% 100%; /* White */
+    --background: 230 49% 11%; /* Deep Navy Blue */
+    --foreground: 0 0% 100%; /* Pure White */
 
-    --card: 0 0% 6%; /* Rich Black */
-    --card-foreground: 0 0% 100%; /* White */
+    --card: 234 29% 22%; /* Grid Purple */
+    --card-foreground: 0 0% 100%; /* Pure White */
 
-    --popover: 0 0% 0%; /* Pure Black */
-    --popover-foreground: 0 0% 100%; /* White */
+    --popover: 230 49% 11%; /* Deep Navy Blue */
+    --popover-foreground: 0 0% 100%; /* Pure White */
 
-    --primary: 210 100% 50%; /* Electric Blue */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 180 100% 50%; /* Neon Blue */
+    --primary-foreground: 0 0% 100%; /* Pure White */
 
-    --secondary: 0 0% 16%; /* Medium Gray */
-    --secondary-foreground: 0 0% 100%; /* White */
+    --secondary: 234 29% 22%; /* Grid Purple */
+    --secondary-foreground: 0 0% 100%; /* Pure White */
 
-    --muted: 0 0% 10%; /* Dark Gray */
-    --muted-foreground: 0 0% 96%; /* Soft White */
+    --muted: 234 29% 22%; /* Grid Purple */
+    --muted-foreground: 223 33% 82%; /* Soft Blue Gray */
 
-    --accent: 210 100% 60%; /* Blue Glow */
-    --accent-foreground: 0 0% 100%; /* White */
+    --accent: 277 74% 53%; /* Electric Violet */
+    --accent-foreground: 0 0% 100%; /* Pure White */
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%; /* White */
+    --destructive-foreground: 0 0% 100%; /* Pure White */
 
-    --border: 0 0% 16%; /* Medium Gray */
-    --input: 0 0% 16%; /* Medium Gray */
-    --ring: 210 100% 50%; /* Electric Blue */
+    --border: 234 29% 22%; /* Grid Purple */
+    --input: 234 29% 22%; /* Grid Purple */
+    --ring: 180 100% 50%; /* Neon Blue */
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 0%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 210 100% 50%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 16%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 16%;
-    --sidebar-ring: 210 100% 50%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 0 0% 0%; /* Pure Black */
-    --foreground: 0 0% 100%; /* White */
+    --background: 230 49% 11%; /* Deep Navy Blue */
+    --foreground: 0 0% 100%; /* Pure White */
 
-    --card: 0 0% 6%; /* Rich Black */
-    --card-foreground: 0 0% 100%; /* White */
+    --card: 234 29% 22%; /* Grid Purple */
+    --card-foreground: 0 0% 100%; /* Pure White */
 
-    --popover: 0 0% 0%; /* Pure Black */
-    --popover-foreground: 0 0% 100%; /* White */
+    --popover: 230 49% 11%; /* Deep Navy Blue */
+    --popover-foreground: 0 0% 100%; /* Pure White */
 
-    --primary: 210 100% 50%; /* Electric Blue */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 180 100% 50%; /* Neon Blue */
+    --primary-foreground: 0 0% 100%; /* Pure White */
 
-    --secondary: 0 0% 16%; /* Medium Gray */
-    --secondary-foreground: 0 0% 100%; /* White */
+    --secondary: 234 29% 22%; /* Grid Purple */
+    --secondary-foreground: 0 0% 100%; /* Pure White */
 
-    --muted: 0 0% 10%; /* Dark Gray */
-    --muted-foreground: 0 0% 96%; /* Soft White */
+    --muted: 234 29% 22%; /* Grid Purple */
+    --muted-foreground: 223 33% 82%; /* Soft Blue Gray */
 
-    --accent: 210 100% 60%; /* Blue Glow */
-    --accent-foreground: 0 0% 100%; /* White */
+    --accent: 277 74% 53%; /* Electric Violet */
+    --accent-foreground: 0 0% 100%; /* Pure White */
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%; /* White */
+    --destructive-foreground: 0 0% 100%; /* Pure White */
 
-    --border: 0 0% 16%; /* Medium Gray */
-    --input: 0 0% 16%; /* Medium Gray */
-    --ring: 210 100% 50%; /* Electric Blue */
+    --border: 234 29% 22%; /* Grid Purple */
+    --input: 234 29% 22%; /* Grid Purple */
+    --ring: 180 100% 50%; /* Neon Blue */
 
-    --sidebar-background: 0 0% 0%; /* Pure Black */
-    --sidebar-foreground: 0 0% 100%; /* White */
-    --sidebar-primary: 210 100% 50%; /* Electric Blue */
-    --sidebar-primary-foreground: 0 0% 100%; /* White */
-    --sidebar-accent: 0 0% 16%; /* Medium Gray */
-    --sidebar-accent-foreground: 0 0% 100%; /* White */
-    --sidebar-border: 0 0% 16%; /* Medium Gray */
-    --sidebar-ring: 210 100% 50%; /* Electric Blue */
+    --sidebar-background: 230 49% 11%; /* Deep Navy Blue */
+    --sidebar-foreground: 0 0% 100%; /* Pure White */
+    --sidebar-primary: 180 100% 50%; /* Neon Blue */
+    --sidebar-primary-foreground: 0 0% 100%; /* Pure White */
+    --sidebar-accent: 234 29% 22%; /* Grid Purple */
+    --sidebar-accent-foreground: 0 0% 100%; /* Pure White */
+    --sidebar-border: 234 29% 22%; /* Grid Purple */
+    --sidebar-ring: 180 100% 50%; /* Neon Blue */
   }
 }
 
@@ -277,57 +277,56 @@
 @media (prefers-contrast: high) {
   .text-gradient {
     background: none;
-    color: #0084ff;
+    color: #00FFFF;
   }
   
   .bg-gradient-to-r {
-    background: #0084ff;
+    background: #8A2BE2;
   }
 }
 
-/* ====== DESKTOP STYLES (UPDATED FOR BLACK THEME) ====== */
+/* ====== DESKTOP STYLES (unchanged) ====== */
 
-/* Custom scrollbar - Updated for black theme */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  @apply bg-muted/30;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #0084ff;
-  border-radius: 4px;
+  @apply bg-neon-blue/50 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4da6ff;
+  @apply bg-neon-blue/70;
 }
 
-/* Custom utility classes - Updated for black theme */
+/* Custom utility classes */
 .glow-effect {
-  box-shadow: 0 0 15px rgba(0, 132, 255, 0.5);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
 
-.blue-gradient {
-  background: linear-gradient(to right, #0084ff, #4da6ff);
+.blue-purple-gradient {
+  background: linear-gradient(to right, #00FFFF, #8A2BE2);
 }
 
 .text-gradient {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  background-image: linear-gradient(to right, #0084ff, #4da6ff);
+  background-image: linear-gradient(to right, #00FFFF, #8A2BE2);
 }
 
 .glassmorphism {
   backdrop-filter: blur(10px);
-  background: rgba(26, 26, 26, 0.8);
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  background: rgba(40, 43, 72, 0.7);
+  border: 1px solid rgba(138, 43, 226, 0.2);
 }
 
-/* Glowing button effect - Updated for black theme */
+/* Glowing button effect */
 .glow-on-hover {
   position: relative;
   z-index: 1;
@@ -340,7 +339,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, #0084ff, #4da6ff, #0084ff, #4da6ff);
+  background: linear-gradient(45deg, #00FFFF, #8A2BE2, #FF2EF5, #00FFFF);
   background-size: 400% 400%;
   z-index: -1;
   filter: blur(15px);
@@ -365,9 +364,9 @@
   }
 }
 
-/* Add blue gradient */
+/* Add cyber gradient */
 .cyber-gradient {
-  background: linear-gradient(to right, #0084ff, #4da6ff);
+  background: linear-gradient(to right, #00FFFF, #FF2EF5);
 }
 
 /* Animations for GlobalPresenceSection */
@@ -381,7 +380,7 @@
   100% { background-position: 100% 50%; }
 }
 
-/* Ripple Animations for Location Markers - Updated colors */
+/* Ripple Animations for Location Markers */
 @keyframes ripple-1 {
   0% {
     transform: translate(-50%, -50%) scale(1);
@@ -483,7 +482,7 @@
   animation: particle-float 3s ease-out;
 }
 
-/* ULTRA SMOOTH PARTICLE SYSTEM - Mobile Optimized - Updated colors */
+/* ULTRA SMOOTH PARTICLE SYSTEM - Mobile Optimized */
 .particle-container {
   position: absolute;
   top: 0;
@@ -523,48 +522,48 @@
 .particle-1 {
   left: 30%;
   top: 80%;
-  background: #0084ff;
-  box-shadow: 0 0 6px #0084ff;
+  background: #00FFFF;
+  box-shadow: 0 0 6px #00FFFF;
   animation: superSmoothFloat 4s linear 0s infinite;
 }
 
 .particle-2 {
   left: 40%;
   top: 75%;
-  background: #4da6ff;
-  box-shadow: 0 0 6px #4da6ff;
+  background: #8A2BE2;
+  box-shadow: 0 0 6px #8A2BE2;
   animation: superSmoothFloat 5s linear 1s infinite;
 }
 
 .particle-3 {
   left: 50%;
   top: 78%;
-  background: #0084ff;
-  box-shadow: 0 0 6px #0084ff;
+  background: #00FFFF;
+  box-shadow: 0 0 6px #00FFFF;
   animation: superSmoothFloat 4.5s linear 2s infinite;
 }
 
 .particle-4 {
   left: 60%;
   top: 76%;
-  background: #4da6ff;
-  box-shadow: 0 0 6px #4da6ff;
+  background: #8A2BE2;
+  box-shadow: 0 0 6px #8A2BE2;
   animation: superSmoothFloat 5.5s linear 3s infinite;
 }
 
 .particle-5 {
   left: 35%;
   top: 82%;
-  background: #0084ff;
-  box-shadow: 0 0 6px #0084ff;
+  background: #00FFFF;
+  box-shadow: 0 0 6px #00FFFF;
   animation: superSmoothFloat 4.8s linear 4s infinite;
 }
 
 .particle-6 {
   left: 65%;
   top: 79%;
-  background: #4da6ff;
-  box-shadow: 0 0 6px #4da6ff;
+  background: #8A2BE2;
+  box-shadow: 0 0 6px #8A2BE2;
   animation: superSmoothFloat 5.2s linear 5s infinite;
 }
 
@@ -600,16 +599,16 @@
   }
 }
 
-/* Enhanced glow effect for counter - Updated for blue */
+/* Enhanced glow effect for counter */
 @keyframes counter-glow {
   0% {
-    box-shadow: 0 0 30px rgba(0, 132, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
   }
   50% {
-    box-shadow: 0 0 60px rgba(0, 132, 255, 0.4), 0 0 100px rgba(77, 166, 255, 0.2);
+    box-shadow: 0 0 60px rgba(0, 255, 255, 0.4), 0 0 100px rgba(138, 43, 226, 0.2);
   }
   100% {
-    box-shadow: 0 0 30px rgba(0, 132, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
   }
 }
 
@@ -712,7 +711,7 @@
   }
 }
 
-/* Touch-specific styles - Updated for black theme */
+/* Touch-specific styles */
 @media (hover: none) and (pointer: coarse) {
   /* Remove hover effects on touch devices */
   .hover\:scale-105:hover {
@@ -725,27 +724,27 @@
     min-width: 48px;
   }
   
-  /* Add tap highlights - Updated for blue */
+  /* Add tap highlights */
   button:active, a:active, [role="button"]:active {
-    background-color: rgba(0, 132, 255, 0.1);
+    background-color: rgba(0, 255, 255, 0.1);
     transform: scale(0.95);
     transition: all 0.1s ease;
   }
 }
 
-/* Dark mode mobile optimizations - Updated for black theme */
+/* Dark mode mobile optimizations */
 @media (max-width: 768px) and (prefers-color-scheme: dark) {
   /* Ensure good contrast on mobile screens in bright environments */
   .text-soft-blue-gray {
-    color: #f5f5f5;
+    color: #D1D8E8;
   }
   
   .bg-grid-purple\/20 {
-    background-color: rgba(26, 26, 26, 0.3);
+    background-color: rgba(40, 43, 72, 0.3);
   }
 }
 
-/* Print styles - Updated for black theme */
+/* Print styles */
 @media print {
   .particle,
   .animate-pulse,
@@ -760,7 +759,7 @@
   }
   
   .bg-gradient-to-r {
-    background: #0084ff !important;
+    background: #8A2BE2 !important;
     color: white !important;
   }
 }

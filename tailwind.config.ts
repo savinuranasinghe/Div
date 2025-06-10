@@ -62,27 +62,15 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))'
         },
-        // Updated Black Theme Color Palette
-        "pure-black": "#000000",
-        "rich-black": "#0a0a0a", 
-        "dark-gray": "#1a1a1a",
-        "medium-gray": "#2a2a2a",
-        "light-gray": "#404040",
-        "electric-blue": "#0084ff",
-        "blue-glow": "#4da6ff",
-        "soft-white": "#f5f5f5",
-        "bright-white": "#ffffff",
-        "cyber-orange": "#ff6b35", // Keep orange for DivFish
-        
-        // Legacy color names mapped to new black theme (for backward compatibility)
-        "deep-navy-blue": "#000000", // Now pure black
-        "electric-violet": "#0084ff", // Now electric blue
-        "neon-blue": "#0084ff", // Electric blue
-        "cyber-pink": "#4da6ff", // Blue glow
-        "grid-purple": "#1a1a1a", // Dark gray
-        "soft-blue-gray": "#f5f5f5", // Soft white
-        "pure-white": "#ffffff",
-        "neon-lime": "#00ff41", // Keep lime for special effects
+        // New custom colors based on the palette
+        "deep-navy-blue": "#0A0F2C",
+        "electric-violet": "#8A2BE2",
+        "neon-blue": "#00FFFF",
+        "cyber-pink": "#FF2EF5",
+        "grid-purple": "#282B48",
+        "soft-blue-gray": "#BFC7E0",
+        "pure-white": "#FFFFFF",
+        "neon-lime": "#39FF14",
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -116,8 +104,8 @@ export default {
           '50%': { transform: 'translateY(-10px)' }
         },
         'pulse-glow': {
-          '0%, 100%': { opacity: '1', boxShadow: '0 0 20px rgba(0, 132, 255, 0.3)' },
-          '50%': { opacity: '0.7', boxShadow: '0 0 30px rgba(0, 132, 255, 0.6)' }
+          '0%, 100%': { opacity: '1', boxShadow: '0 0 20px rgba(0, 255, 255, 0.2)' },
+          '50%': { opacity: '0.7', boxShadow: '0 0 30px rgba(0, 255, 255, 0.6)' }
         },
         'slide-in-left': {
           '0%': { transform: 'translateX(-100%)', opacity: '0' },
@@ -128,8 +116,8 @@ export default {
           '100%': { transform: 'translateX(0)', opacity: '1' }
         },
         'glow': {
-          '0%, 100%': { boxShadow: '0 0 5px #0084ff, 0 0 10px #4da6ff' },
-          '50%': { boxShadow: '0 0 15px #0084ff, 0 0 20px #4da6ff, 0 0 25px #4da6ff' }
+          '0%, 100%': { boxShadow: '0 0 5px #00FFFF, 0 0 10px #8A2BE2' },
+          '50%': { boxShadow: '0 0 15px #00FFFF, 0 0 20px #8A2BE2, 0 0 25px #8A2BE2' }
         },
         'text-shimmer': {
           '0%': { backgroundPosition: '0% 50%' },

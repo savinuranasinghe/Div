@@ -6,7 +6,6 @@ import { ArrowRight } from "lucide-react";
 const HeroSection: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,60 +31,20 @@ const HeroSection: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Handle video loading and autoplay
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      // Ensure video plays when component mounts
-      const playVideo = async () => {
-        try {
-          await video.play();
-        } catch (error) {
-          console.log("Video autoplay prevented:", error);
-        }
-      };
-      
-      // Try to play when video can start playing
-      video.addEventListener('canplay', playVideo);
-      
-      return () => {
-        video.removeEventListener('canplay', playVideo);
-      };
-    }
-  }, []);
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-20">
-      {/* Background Video */}
-      <div className="absolute inset-0 z-0">
-        <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-        >
-          <source src="/assets/hero.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        
-        {/* Video Overlay - Dark overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-black/40 z-10"></div>
-        
-        {/* Gradient Overlay - Additional styling for better text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-deep-navy-blue/20 via-transparent to-deep-navy-blue/40 z-20"></div>
-      </div>
-
-      {/* Fallback Background Animation (if video fails to load) */}
+      {/* Animated Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-neon-blue/5 to-transparent opacity-30"></div>
         <div className="absolute top-1/4 left-1/4 w-48 md:w-96 h-48 md:h-96 bg-neon-blue/5 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-32 md:w-64 h-32 md:h-64 bg-electric-violet/5 rounded-full blur-3xl animate-pulse"></div>
+        
+        {/* Additional animated elements for more visual interest */}
+        <div className="absolute top-1/2 left-1/2 w-24 md:w-48 h-24 md:h-48 bg-neon-blue/3 rounded-full blur-2xl animate-float"></div>
+        <div className="absolute top-3/4 left-1/3 w-16 md:w-32 h-16 md:h-32 bg-electric-violet/4 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
-      {/* Main Content - Above video */}
+      {/* Main Content */}
       <div className="container mx-auto px-4 relative z-30 text-center">
         <h1 
           ref={titleRef}
@@ -94,9 +53,12 @@ const HeroSection: React.FC = () => {
             lineHeight: "1.1"
           }}
         >
-          {/* Cyan colored text with matching glow over video */}
+          {/* Add your hero title text here */}
           <span className="text-neon-blue block drop-shadow-lg">
-            
+            Beyond Boundaries
+          </span>
+          <span className="text-white block">
+            Digital Innovation
           </span>
         </h1>
         
@@ -104,11 +66,29 @@ const HeroSection: React.FC = () => {
           ref={ctaRef}
           className="flex justify-center opacity-0 transition-opacity duration-700"
         >
-        
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <Button 
+              asChild 
+              className="bg-gradient-to-r from-neon-blue to-electric-violet text-white hover:from-electric-violet hover:to-neon-blue transition-all duration-300 transform hover:scale-105"
+            >
+              <Link to="#services" className="flex items-center gap-2">
+                Explore Our Services
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </Button>
+            
+            <Button 
+              asChild 
+              variant="outline" 
+              className="border-neon-blue text-neon-blue hover:bg-neon-blue/10"
+            >
+              <Link to="#contact">
+                Get In Touch
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
-
-
     </section>
   );
 };
