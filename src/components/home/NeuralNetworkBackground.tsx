@@ -15,7 +15,6 @@ interface Node {
   spawnTime: number;
   pulsePhase: number;
   connections: number[];
-  glowIntensity: number;
 }
 
 interface Connection {
@@ -45,7 +44,6 @@ const NeuralNetworkBackground: React.FC = () => {
   const nextNodeIdRef = useRef(0);
   const nextParticleIdRef = useRef(0);
   const isMobileRef = useRef(typeof window !== 'undefined' && window.innerWidth < 768);
-  const mouseRef = useRef({ x: 0, y: 0, isActive: false });
   
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : 1920,
@@ -67,12 +65,9 @@ const NeuralNetworkBackground: React.FC = () => {
     nodeSpeed: 0.5,
     particleSpeed: 0.02,
     edgeBuffer: 30, // Small buffer to use more screen space
-    mouseAttractionRadius: 200, // Mouse interaction radius
-    mouseAttractionStrength: 0.08, // How strong the attraction is
-    mouseGlowRadius: 150, // Radius for glow enhancement
   });
 
-  // Handle window resize and mouse interactions
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
@@ -82,37 +77,8 @@ const NeuralNetworkBackground: React.FC = () => {
       isMobileRef.current = window.innerWidth < 768;
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-        isActive: true
-      };
-    };
-
-    const handleMouseLeave = () => {
-      mouseRef.current.isActive = false;
-    };
-
-    const canvas = canvasRef.current;
-    
     window.addEventListener('resize', handleResize);
-    if (canvas) {
-      canvas.addEventListener('mousemove', handleMouseMove);
-      canvas.addEventListener('mouseleave', handleMouseLeave);
-    }
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (canvas) {
-        canvas.removeEventListener('mousemove', handleMouseMove);
-        canvas.removeEventListener('mouseleave', handleMouseLeave);
-      }
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Create a new node with edge-prioritized distribution
@@ -181,7 +147,6 @@ const NeuralNetworkBackground: React.FC = () => {
       spawnTime: currentTime,
       pulsePhase: Math.random() * Math.PI * 2,
       connections: [],
-      glowIntensity: 0.6 + Math.random() * 0.4,
     };
   };
 
@@ -258,8 +223,8 @@ const NeuralNetworkBackground: React.FC = () => {
     ctx.save();
     ctx.globalAlpha = node.opacity;
     
-    // Enhanced cyan glow effect with mouse interaction
-    ctx.shadowBlur = 25 * node.glowIntensity;
+    // Enhanced cyan glow effect
+    ctx.shadowBlur = 25;
     ctx.shadowColor = COLORS[0];
     ctx.fillStyle = COLORS[0];
     
@@ -279,43 +244,20 @@ const NeuralNetworkBackground: React.FC = () => {
     ctx.restore();
   };
 
-  // Draw connection line with mouse interaction highlighting
+  // Draw connection line with cyan color
   const drawConnection = (ctx: CanvasRenderingContext2D, connection: Connection) => {
     const fromNode = nodesRef.current.find(n => n.id === connection.from);
     const toNode = nodesRef.current.find(n => n.id === connection.to);
     
     if (!fromNode || !toNode || !fromNode.isVisible || !toNode.isVisible) return;
 
-    let connectionOpacity = connection.opacity;
-    let lineWidth = 1.2;
-    let shadowBlur = 6;
-
-    // Enhance connections near mouse cursor
-    if (mouseRef.current.isActive) {
-      const config = getConfig();
-      const mouseX = mouseRef.current.x;
-      const mouseY = mouseRef.current.y;
-      
-      // Check if connection line is near mouse
-      const midX = (fromNode.x + toNode.x) / 2;
-      const midY = (fromNode.y + toNode.y) / 2;
-      const distanceToMouse = getDistance(midX, midY, mouseX, mouseY);
-      
-      if (distanceToMouse < config.mouseGlowRadius) {
-        const proximity = (config.mouseGlowRadius - distanceToMouse) / config.mouseGlowRadius;
-        connectionOpacity *= (1 + proximity * 0.8);
-        lineWidth *= (1 + proximity * 0.5);
-        shadowBlur *= (1 + proximity * 0.7);
-      }
-    }
-
     ctx.save();
-    ctx.globalAlpha = connectionOpacity;
+    ctx.globalAlpha = connection.opacity;
     
-    // Simple cyan line with enhanced effects
+    // Simple cyan line (no gradient since all nodes are cyan)
     ctx.strokeStyle = COLORS[0];
-    ctx.lineWidth = lineWidth;
-    ctx.shadowBlur = shadowBlur;
+    ctx.lineWidth = 1.2;
+    ctx.shadowBlur = 6;
     ctx.shadowColor = COLORS[0];
     
     ctx.beginPath();
@@ -324,6 +266,11 @@ const NeuralNetworkBackground: React.FC = () => {
     ctx.stroke();
     
     ctx.restore();
+  };
+
+  // Draw data particle (unused but keeping for compatibility)
+  const drawDataParticle = (ctx: CanvasRenderingContext2D, particle: DataParticle) => {
+    // Not used since particles are disabled
   };
 
   // Utility function to convert hex to RGB (keeping for compatibility)
@@ -336,61 +283,8 @@ const NeuralNetworkBackground: React.FC = () => {
     } : { r: 0, g: 0, b: 0 };
   };
 
-  // Mouse attraction effect
-  const applyMouseAttraction = (node: Node, config: any) => {
-    if (!mouseRef.current.isActive) return;
-    
-    const mouseX = mouseRef.current.x;
-    const mouseY = mouseRef.current.y;
-    const distance = getDistance(node.x, node.y, mouseX, mouseY);
-    
-    if (distance < config.mouseAttractionRadius) {
-      const force = (config.mouseAttractionRadius - distance) / config.mouseAttractionRadius;
-      const attractionX = (mouseX - node.x) * force * config.mouseAttractionStrength;
-      const attractionY = (mouseY - node.y) * force * config.mouseAttractionStrength;
-      
-      // Apply subtle attraction to target position
-      node.targetX += attractionX;
-      node.targetY += attractionY;
-      
-      // Keep nodes within bounds
-      node.targetX = Math.max(config.edgeBuffer, Math.min(window.innerWidth - config.edgeBuffer, node.targetX));
-      node.targetY = Math.max(config.edgeBuffer, Math.min(window.innerHeight - config.edgeBuffer, node.targetY));
-    }
-  };
-
-  // Mouse glow enhancement effect
-  const applyMouseGlowEffect = (node: Node, config: any) => {
-    if (!mouseRef.current.isActive) {
-      // Gradually return to normal when mouse is not active
-      node.glowIntensity = Math.max(0.6, node.glowIntensity - 0.02);
-      return;
-    }
-    
-    const mouseX = mouseRef.current.x;
-    const mouseY = mouseRef.current.y;
-    const distance = getDistance(node.x, node.y, mouseX, mouseY);
-    
-    if (distance < config.mouseGlowRadius) {
-      const proximity = (config.mouseGlowRadius - distance) / config.mouseGlowRadius;
-      const enhancedGlow = 0.6 + (proximity * 0.8); // Base glow + enhancement
-      node.glowIntensity = Math.max(node.glowIntensity, enhancedGlow);
-      
-      // Slightly increase opacity for nearby nodes
-      const opacityBoost = proximity * 0.2;
-      node.targetOpacity = Math.min(1, node.targetOpacity + opacityBoost);
-    } else {
-      // Gradually return to normal glow
-      node.glowIntensity = Math.max(0.6, node.glowIntensity - 0.01);
-    }
-  };
-
-  // Update node properties with mouse interactions
+  // Update node properties with better movement distribution
   const updateNode = (node: Node, currentTime: number, config: any) => {
-    // Apply mouse interactions first
-    applyMouseAttraction(node, config);
-    applyMouseGlowEffect(node, config);
-    
     // Smooth movement towards target
     node.x += (node.targetX - node.x) * config.nodeSpeed * 0.02;
     node.y += (node.targetY - node.y) * config.nodeSpeed * 0.02;
@@ -409,44 +303,13 @@ const NeuralNetworkBackground: React.FC = () => {
       }
     }
     
-    // Enhanced random movement with edge preference (less frequent when mouse is active)
-    const movementChance = mouseRef.current.isActive ? 0.004 : 0.008;
-    if (Math.random() < movementChance) {
+    // Enhanced random movement with better distribution
+    if (Math.random() < 0.008) { // Slightly more frequent movement
       const padding = config.edgeBuffer;
-      
-      // 70% chance to move to edge areas, 30% to center
-      if (Math.random() < 0.7) {
-        // Move to edge areas
-        const edgeChoice = Math.floor(Math.random() * 4);
-        switch (edgeChoice) {
-          case 0: // Top edge
-            node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
-            node.targetY = padding + Math.random() * 100;
-            break;
-          case 1: // Bottom edge
-            node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
-            node.targetY = window.innerHeight - 100 - padding + Math.random() * 100;
-            break;
-          case 2: // Left edge
-            node.targetX = padding + Math.random() * 100;
-            node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
-            break;
-          case 3: // Right edge
-            node.targetX = window.innerWidth - 100 - padding + Math.random() * 100;
-            node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
-            break;
-        }
-      } else {
-        // Move to center areas (less frequently)
-        node.targetX = window.innerWidth * 0.3 + Math.random() * (window.innerWidth * 0.4);
-        node.targetY = window.innerHeight * 0.3 + Math.random() * (window.innerHeight * 0.4);
-      }
+      // Ensure nodes can move to any part of the screen
+      node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
+      node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
     }
-  };
-
-  // Draw data particle (unused but keeping for compatibility)
-  const drawDataParticle = (ctx: CanvasRenderingContext2D, particle: DataParticle) => {
-    // Not used since particles are disabled
   };
 
   // Update data particles (unused but keeping for compatibility)
