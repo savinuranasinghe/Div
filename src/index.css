@@ -886,3 +886,103 @@
     opacity: 0.7;
   }
 }
+/* Add to src/index.css - Neural Network Optimizations */
+
+/* Neural network animation optimizations */
+.neural-network-canvas {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Enhanced neural glow effects */
+@keyframes neural-pulse {
+  0% {
+    filter: drop-shadow(0 0 5px currentColor);
+    opacity: 0.6;
+  }
+  50% {
+    filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor);
+    opacity: 0.9;
+  }
+  100% {
+    filter: drop-shadow(0 0 5px currentColor);
+    opacity: 0.6;
+  }
+}
+
+.neural-glow-effect {
+  animation: neural-pulse 4s ease-in-out infinite;
+}
+
+/* Data flow animation */
+@keyframes data-flow {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.data-flow-effect {
+  animation: data-flow 3s linear infinite;
+}
+
+/* Mobile neural network optimizations */
+@media (max-width: 768px) {
+  .neural-network-canvas {
+    opacity: 0.5; /* Reduce opacity on mobile */
+  }
+  
+  /* Simplify animations on mobile */
+  .neural-glow-effect {
+    animation-duration: 6s; /* Slower on mobile */
+  }
+  
+  .data-flow-effect {
+    animation-duration: 4s; /* Slower data flow */
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .neural-network-canvas {
+    animation: none !important;
+    opacity: 0.3 !important;
+  }
+  
+  .neural-glow-effect,
+  .data-flow-effect {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .neural-network-canvas {
+    opacity: 0.4 !important;
+    mix-blend-mode: normal !important;
+  }
+}
+
+/* Performance optimizations for neural network */
+.neural-optimized {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Ensure smooth 60fps animations */
+@media (min-width: 1920px) {
+  .neural-network-canvas {
+    opacity: 0.8;
+  }
+}
