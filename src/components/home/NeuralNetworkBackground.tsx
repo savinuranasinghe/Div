@@ -50,20 +50,21 @@ const NeuralNetworkBackground: React.FC = () => {
     height: typeof window !== 'undefined' ? window.innerHeight : 1080,
   });
 
-  // Brand colors with smooth transitions
-  const COLORS = ['#00FFFF', '#8A2BE2', '#FF2EF5']; // Cyan, Purple, Pink
+  // Only cyan color as requested
+  const COLORS = ['#00FFFF']; // Only Cyan
   
-  // Configuration based on device
+  // Enhanced configuration for more nodes everywhere
   const getConfig = () => ({
-    maxNodes: isMobileRef.current ? 15 : 25,
-    maxConnections: isMobileRef.current ? 20 : 40,
-    connectionDistance: isMobileRef.current ? 150 : 200,
-    nodeSpawnRate: isMobileRef.current ? 0.02 : 0.03,
-    nodeLifetime: isMobileRef.current ? 8000 : 12000,
-    particleSpawnRate: 0.1,
-    maxParticlesPerConnection: isMobileRef.current ? 2 : 4,
+    maxNodes: isMobileRef.current ? 35 : 60, // Much more nodes
+    maxConnections: isMobileRef.current ? 30 : 50, // Moderate connections
+    connectionDistance: isMobileRef.current ? 180 : 220, // Moderate connection range
+    nodeSpawnRate: isMobileRef.current ? 0.06 : 0.1, // Faster spawning
+    nodeLifetime: isMobileRef.current ? 12000 : 18000, // Longer lifetime
+    particleSpawnRate: 0, // NO PARTICLES as requested
+    maxParticlesPerConnection: 0, // NO PARTICLES
     nodeSpeed: 0.5,
     particleSpeed: 0.02,
+    edgeBuffer: 30, // Small buffer to use more screen space
   });
 
   // Handle window resize
@@ -80,11 +81,56 @@ const NeuralNetworkBackground: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Create a new node
+  // Create a new node with edge-prioritized distribution
   const createNode = (width: number, height: number, currentTime: number): Node => {
-    const padding = 100;
-    const x = padding + Math.random() * (width - 2 * padding);
-    const y = padding + Math.random() * (height - 2 * padding);
+    const config = getConfig();
+    const padding = config.edgeBuffer;
+    
+    // Edge zones with higher probability
+    const edgeZones = [
+      // Top edge strip
+      { x: padding, y: padding, w: width - 2 * padding, h: 80, weight: 3 },
+      // Bottom edge strip
+      { x: padding, y: height - 80 - padding, w: width - 2 * padding, h: 80, weight: 3 },
+      // Left edge strip
+      { x: padding, y: padding + 80, w: 80, h: height - 160 - 2 * padding, weight: 3 },
+      // Right edge strip
+      { x: width - 80 - padding, y: padding + 80, w: 80, h: height - 160 - 2 * padding, weight: 3 },
+      
+      // Corner zones (extra priority)
+      { x: padding, y: padding, w: 120, h: 120, weight: 4 },
+      { x: width - 120 - padding, y: padding, w: 120, h: 120, weight: 4 },
+      { x: padding, y: height - 120 - padding, w: 120, h: 120, weight: 4 },
+      { x: width - 120 - padding, y: height - 120 - padding, w: 120, h: 120, weight: 4 },
+      
+      // Mid-edge zones
+      { x: width * 0.3, y: padding, w: width * 0.4, h: 60, weight: 2 },
+      { x: width * 0.3, y: height - 60 - padding, w: width * 0.4, h: 60, weight: 2 },
+      { x: padding, y: height * 0.3, w: 60, h: height * 0.4, weight: 2 },
+      { x: width - 60 - padding, y: height * 0.3, w: 60, h: height * 0.4, weight: 2 },
+    ];
+    
+    // Center zones with lower probability
+    const centerZones = [
+      { x: width * 0.2, y: height * 0.2, w: width * 0.6, h: height * 0.6, weight: 1 },
+      { x: width * 0.25, y: height * 0.25, w: width * 0.5, h: height * 0.5, weight: 0.5 },
+    ];
+    
+    // Combine all zones
+    const allZones = [...edgeZones, ...centerZones];
+    
+    // Create weighted selection array
+    const weightedZones = [];
+    allZones.forEach(zone => {
+      for (let i = 0; i < zone.weight * 10; i++) {
+        weightedZones.push(zone);
+      }
+    });
+    
+    // Select a zone based on weight
+    const selectedZone = weightedZones[Math.floor(Math.random() * weightedZones.length)];
+    const x = selectedZone.x + Math.random() * selectedZone.w;
+    const y = selectedZone.y + Math.random() * selectedZone.h;
     
     return {
       id: nextNodeIdRef.current++,
@@ -92,11 +138,11 @@ const NeuralNetworkBackground: React.FC = () => {
       y,
       targetX: x,
       targetY: y,
-      size: 3 + Math.random() * 4,
+      size: 3 + Math.random() * 4, // Keep original sizes
       opacity: 0,
       targetOpacity: 0.6 + Math.random() * 0.4,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      colorIndex: Math.floor(Math.random() * COLORS.length),
+      color: COLORS[0], // Always cyan
+      colorIndex: 0,
       isVisible: true,
       spawnTime: currentTime,
       pulsePhase: Math.random() * Math.PI * 2,
@@ -104,7 +150,7 @@ const NeuralNetworkBackground: React.FC = () => {
     };
   };
 
-  // Create a data particle
+  // Create a data particle (unused but keeping for compatibility)
   const createDataParticle = (fromNode: Node, toNode: Node): DataParticle => {
     return {
       id: nextParticleIdRef.current++,
@@ -112,7 +158,7 @@ const NeuralNetworkBackground: React.FC = () => {
       speed: 0.01 + Math.random() * 0.02,
       size: 1 + Math.random() * 2,
       opacity: 0.7 + Math.random() * 0.3,
-      color: fromNode.color,
+      color: COLORS[0], // Always cyan
       fromNode: fromNode.id,
       toNode: toNode.id,
     };
@@ -150,8 +196,8 @@ const NeuralNetworkBackground: React.FC = () => {
               from: nodeA.id,
               to: nodeB.id,
               strength,
-              opacity: strength * 0.3,
-              particles: [],
+              opacity: strength * 0.35, // Slightly higher opacity for better visibility
+              particles: [], // No particles
             });
           }
         }
@@ -166,36 +212,21 @@ const NeuralNetworkBackground: React.FC = () => {
     }
   };
 
-  // Draw a node with glow effect
+  // Draw a node with cyan glow effect
   const drawNode = (ctx: CanvasRenderingContext2D, node: Node, currentTime: number) => {
     if (!node.isVisible || node.opacity <= 0) return;
 
     // Pulsing effect
     const pulseValue = Math.sin(currentTime * 0.002 + node.pulsePhase) * 0.3 + 0.7;
     const finalSize = node.size * pulseValue;
-    
-    // Color transition over time
-    const colorTransition = (currentTime - node.spawnTime) * 0.0005;
-    const colorIndex = (node.colorIndex + colorTransition) % COLORS.length;
-    const currentColorIndex = Math.floor(colorIndex) % COLORS.length;
-    const nextColorIndex = (currentColorIndex + 1) % COLORS.length;
-    const blend = colorIndex - Math.floor(colorIndex);
-    
-    // Interpolate between colors
-    const currentColor = hexToRgb(COLORS[currentColorIndex]);
-    const nextColor = hexToRgb(COLORS[nextColorIndex]);
-    const r = Math.round(currentColor.r * (1 - blend) + nextColor.r * blend);
-    const g = Math.round(currentColor.g * (1 - blend) + nextColor.g * blend);
-    const b = Math.round(currentColor.b * (1 - blend) + nextColor.b * blend);
-    const interpolatedColor = `rgb(${r}, ${g}, ${b})`;
 
     ctx.save();
     ctx.globalAlpha = node.opacity;
     
-    // Outer glow
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = interpolatedColor;
-    ctx.fillStyle = interpolatedColor;
+    // Enhanced cyan glow effect
+    ctx.shadowBlur = 25;
+    ctx.shadowColor = COLORS[0];
+    ctx.fillStyle = COLORS[0];
     
     // Draw node
     ctx.beginPath();
@@ -213,7 +244,7 @@ const NeuralNetworkBackground: React.FC = () => {
     ctx.restore();
   };
 
-  // Draw connection line with gradient
+  // Draw connection line with cyan color
   const drawConnection = (ctx: CanvasRenderingContext2D, connection: Connection) => {
     const fromNode = nodesRef.current.find(n => n.id === connection.from);
     const toNode = nodesRef.current.find(n => n.id === connection.to);
@@ -223,15 +254,11 @@ const NeuralNetworkBackground: React.FC = () => {
     ctx.save();
     ctx.globalAlpha = connection.opacity;
     
-    // Create gradient line
-    const gradient = ctx.createLinearGradient(fromNode.x, fromNode.y, toNode.x, toNode.y);
-    gradient.addColorStop(0, fromNode.color);
-    gradient.addColorStop(1, toNode.color);
-    
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = 1;
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = fromNode.color;
+    // Simple cyan line (no gradient since all nodes are cyan)
+    ctx.strokeStyle = COLORS[0];
+    ctx.lineWidth = 1.2;
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = COLORS[0];
     
     ctx.beginPath();
     ctx.moveTo(fromNode.x, fromNode.y);
@@ -241,30 +268,12 @@ const NeuralNetworkBackground: React.FC = () => {
     ctx.restore();
   };
 
-  // Draw data particle
+  // Draw data particle (unused but keeping for compatibility)
   const drawDataParticle = (ctx: CanvasRenderingContext2D, particle: DataParticle) => {
-    const fromNode = nodesRef.current.find(n => n.id === particle.fromNode);
-    const toNode = nodesRef.current.find(n => n.id === particle.toNode);
-    
-    if (!fromNode || !toNode) return;
-
-    const x = fromNode.x + (toNode.x - fromNode.x) * particle.progress;
-    const y = fromNode.y + (toNode.y - fromNode.y) * particle.progress;
-
-    ctx.save();
-    ctx.globalAlpha = particle.opacity;
-    ctx.fillStyle = particle.color;
-    ctx.shadowBlur = 8;
-    ctx.shadowColor = particle.color;
-    
-    ctx.beginPath();
-    ctx.arc(x, y, particle.size, 0, Math.PI * 2);
-    ctx.fill();
-    
-    ctx.restore();
+    // Not used since particles are disabled
   };
 
-  // Utility function to convert hex to RGB
+  // Utility function to convert hex to RGB (keeping for compatibility)
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
@@ -274,7 +283,7 @@ const NeuralNetworkBackground: React.FC = () => {
     } : { r: 0, g: 0, b: 0 };
   };
 
-  // Update node properties
+  // Update node properties with better movement distribution
   const updateNode = (node: Node, currentTime: number, config: any) => {
     // Smooth movement towards target
     node.x += (node.targetX - node.x) * config.nodeSpeed * 0.02;
@@ -294,32 +303,18 @@ const NeuralNetworkBackground: React.FC = () => {
       }
     }
     
-    // Gentle random movement
-    if (Math.random() < 0.005) {
-      const padding = 100;
+    // Enhanced random movement with better distribution
+    if (Math.random() < 0.008) { // Slightly more frequent movement
+      const padding = config.edgeBuffer;
+      // Ensure nodes can move to any part of the screen
       node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
       node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
     }
   };
 
-  // Update data particles
+  // Update data particles (unused but keeping for compatibility)
   const updateDataParticles = (connection: Connection, config: any) => {
-    // Update existing particles
-    connection.particles = connection.particles.filter(particle => {
-      particle.progress += particle.speed;
-      return particle.progress <= 1;
-    });
-    
-    // Spawn new particles
-    if (Math.random() < config.particleSpawnRate && 
-        connection.particles.length < config.maxParticlesPerConnection) {
-      const fromNode = nodesRef.current.find(n => n.id === connection.from);
-      const toNode = nodesRef.current.find(n => n.id === connection.to);
-      
-      if (fromNode && toNode && fromNode.isVisible && toNode.isVisible) {
-        connection.particles.push(createDataParticle(fromNode, toNode));
-      }
-    }
+    // Particles are disabled, so this does nothing
   };
 
   // Main animation setup
@@ -341,9 +336,9 @@ const NeuralNetworkBackground: React.FC = () => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Spawn new nodes
-      if (Math.random() < config.nodeSpawnRate && 
-          nodesRef.current.filter(n => n.isVisible).length < config.maxNodes) {
+      // Spawn new nodes more frequently
+      const visibleNodes = nodesRef.current.filter(n => n.isVisible).length;
+      if (Math.random() < config.nodeSpawnRate && visibleNodes < config.maxNodes) {
         nodesRef.current.push(createNode(canvas.width, canvas.height, currentTime));
       }
 
@@ -362,15 +357,9 @@ const NeuralNetworkBackground: React.FC = () => {
       // Update connections
       updateConnections();
 
-      // Update and draw connections with particles
+      // Draw connections (no particles)
       connectionsRef.current.forEach(connection => {
-        updateDataParticles(connection, config);
         drawConnection(ctx, connection);
-        
-        // Draw particles on this connection
-        connection.particles.forEach(particle => {
-          drawDataParticle(ctx, particle);
-        });
       });
 
       // Draw nodes
