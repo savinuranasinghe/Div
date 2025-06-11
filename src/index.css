@@ -986,3 +986,107 @@
     opacity: 0.8;
   }
 }
+/* Add to src/index.css - Code Matrix Optimizations */
+
+/* Matrix rain animation optimizations */
+.matrix-canvas {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  font-family: 'Courier New', monospace;
+}
+
+/* Enhanced matrix glow effects */
+@keyframes matrix-glow {
+  0% {
+    text-shadow: 0 0 5px currentColor;
+  }
+  50% {
+    text-shadow: 0 0 10px currentColor, 0 0 15px currentColor;
+  }
+  100% {
+    text-shadow: 0 0 5px currentColor;
+  }
+}
+
+.matrix-glow-effect {
+  animation: matrix-glow 2s ease-in-out infinite;
+}
+
+/* Matrix character effects */
+@keyframes matrix-flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.matrix-character {
+  animation: matrix-flicker 3s linear infinite;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+/* Mobile matrix optimizations */
+@media (max-width: 768px) {
+  .matrix-canvas {
+    opacity: 0.4; /* Reduce opacity on mobile */
+  }
+  
+  /* Ensure readability on mobile */
+  .matrix-character {
+    font-size: 12px;
+    animation-duration: 4s; /* Slower on mobile */
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .matrix-canvas {
+    animation: none !important;
+    opacity: 0.2 !important;
+  }
+  
+  .matrix-glow-effect,
+  .matrix-character {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .matrix-canvas {
+    opacity: 0.3 !important;
+    mix-blend-mode: normal !important;
+  }
+  
+  .matrix-character {
+    color: #00FF00 !important; /* Fallback to traditional green */
+  }
+}
+
+/* Performance optimizations for matrix */
+.matrix-optimized {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Ensure smooth text rendering */
+.matrix-text {
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Large screen optimizations */
+@media (min-width: 1920px) {
+  .matrix-canvas {
+    opacity: 0.6;
+  }
+  
+  .matrix-character {
+    font-size: 16px;
+  }
+}

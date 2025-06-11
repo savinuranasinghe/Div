@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import NeuralNetworkBackground from "./NeuralNetworkBackground"; // Replace the old background
+import CodeMatrixBackground from "./CodeMatrixBackground"; // Replace the neural network background
 
 const HeroSection: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -42,8 +42,8 @@ const HeroSection: React.FC = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-20">
-      {/* Neural Network Background Animation */}
-      <NeuralNetworkBackground />
+      {/* Code Matrix Background Animation */}
+      <CodeMatrixBackground />
       
       {/* Static Background Elements */}
       <div className="absolute inset-0 z-0">
