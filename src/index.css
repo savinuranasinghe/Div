@@ -1230,3 +1230,178 @@
 .wave-glow-effect {
   animation: wave-glow 8s ease-in-out infinite;
 }
+/* Add to src/index.css - Orbiting Elements Optimizations */
+
+/* Orbiting elements animation optimizations */
+.orbiting-canvas {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Enhanced orbital glow effects */
+@keyframes orbital-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px currentColor);
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor);
+    transform: scale(1.1);
+  }
+}
+
+.orbital-glow-effect {
+  animation: orbital-pulse 4s ease-in-out infinite;
+}
+
+/* Shooting star animation */
+@keyframes shooting-star {
+  0% {
+    transform: translateX(-100px) translateY(-100px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw) translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.shooting-star-effect {
+  animation: shooting-star 3s linear infinite;
+}
+
+/* Constellation connection effects */
+@keyframes constellation-flicker {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.constellation-effect {
+  animation: constellation-flicker 5s ease-in-out infinite;
+}
+
+/* Orbital path visualization */
+.orbital-path {
+  stroke-dasharray: 5, 5;
+  animation: dash 20s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+/* Mobile orbital optimizations */
+@media (max-width: 768px) {
+  .orbiting-canvas {
+    opacity: 0.5; /* Reduce opacity on mobile */
+  }
+  
+  /* Simplify orbital animations on mobile */
+  .orbital-glow-effect {
+    animation-duration: 6s; /* Slower on mobile */
+  }
+  
+  .shooting-star-effect {
+    animation-duration: 4s; /* Slower shooting stars */
+  }
+  
+  .constellation-effect {
+    animation-duration: 7s; /* Slower constellation flicker */
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .orbiting-canvas {
+    animation: none !important;
+    opacity: 0.3 !important;
+  }
+  
+  .orbital-glow-effect,
+  .shooting-star-effect,
+  .constellation-effect {
+    animation: none !important;
+  }
+  
+  .orbital-path {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .orbiting-canvas {
+    opacity: 0.4 !important;
+    mix-blend-mode: normal !important;
+  }
+}
+
+/* Performance optimizations for space elements */
+.space-optimized {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Smooth space rendering */
+.space-smooth {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+}
+
+/* Large screen optimizations */
+@media (min-width: 1920px) {
+  .orbiting-canvas {
+    opacity: 0.7;
+  }
+}
+
+/* Space glow effects */
+@keyframes space-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px rgba(0, 255, 255, 0.4));
+  }
+  33% {
+    filter: drop-shadow(0 0 6px rgba(138, 43, 226, 0.4));
+  }
+  66% {
+    filter: drop-shadow(0 0 6px rgba(255, 46, 245, 0.4));
+  }
+}
+
+.space-glow-effect {
+  animation: space-glow 12s ease-in-out infinite;
+}
+
+/* Starfield effect for additional atmosphere */
+.starfield-bg {
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.15), transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(0,255,255,0.1), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(138,43,226,0.1), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(255,46,245,0.1), transparent);
+  background-repeat: repeat;
+  background-size: 200px 100px;
+  animation: starfield 60s linear infinite;
+}
+
+@keyframes starfield {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 200px 100px;
+  }
+}
