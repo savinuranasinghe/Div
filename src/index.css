@@ -1090,3 +1090,143 @@
     font-size: 16px;
   }
 }
+/* Add to src/index.css - Gradient Wave Optimizations */
+
+/* Gradient wave animation optimizations */
+.gradient-wave-canvas {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Enhanced wave breathing effects */
+@keyframes wave-breathe {
+  0% {
+    opacity: 0.2;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scaleY(1.05);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scaleY(1);
+  }
+}
+
+.wave-breathing-effect {
+  animation: wave-breathe 6s ease-in-out infinite;
+}
+
+/* Gradient flow animation */
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-flow-effect {
+  background-size: 200% 200%;
+  animation: gradient-flow 8s ease infinite;
+}
+
+/* Wave layer effects */
+.wave-layer-1 {
+  animation-delay: 0s;
+}
+
+.wave-layer-2 {
+  animation-delay: 1s;
+}
+
+.wave-layer-3 {
+  animation-delay: 2s;
+}
+
+.wave-layer-4 {
+  animation-delay: 3s;
+}
+
+/* Mobile wave optimizations */
+@media (max-width: 768px) {
+  .gradient-wave-canvas {
+    opacity: 0.6; /* Reduce opacity on mobile */
+  }
+  
+  /* Simplify wave animations on mobile */
+  .wave-breathing-effect {
+    animation-duration: 8s; /* Slower on mobile */
+  }
+  
+  .gradient-flow-effect {
+    animation-duration: 10s; /* Slower gradient flow */
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-wave-canvas {
+    animation: none !important;
+    opacity: 0.3 !important;
+  }
+  
+  .wave-breathing-effect,
+  .gradient-flow-effect {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .gradient-wave-canvas {
+    opacity: 0.2 !important;
+    mix-blend-mode: normal !important;
+  }
+}
+
+/* Performance optimizations for waves */
+.wave-optimized {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Smooth wave rendering */
+.wave-smooth {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+}
+
+/* Large screen optimizations */
+@media (min-width: 1920px) {
+  .gradient-wave-canvas {
+    opacity: 0.8;
+  }
+}
+
+/* Enhanced gradient effects */
+.gradient-enhanced {
+  background: linear-gradient(-45deg, #00FFFF, #8A2BE2, #FF2EF5, #00FFFF);
+  background-size: 400% 400%;
+  animation: gradient-flow 15s ease infinite;
+}
+
+/* Wave glow effects */
+@keyframes wave-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.4));
+  }
+}
+
+.wave-glow-effect {
+  animation: wave-glow 8s ease-in-out infinite;
+}

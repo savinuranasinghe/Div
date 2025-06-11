@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import CodeMatrixBackground from "./CodeMatrixBackground"; // Replace the neural network background
+import GradientWaveBackground from "./GradientWaveBackground"; // Replace the matrix background
 
 const HeroSection: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -42,8 +42,8 @@ const HeroSection: React.FC = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-20">
-      {/* Code Matrix Background Animation */}
-      <CodeMatrixBackground />
+      {/* Gradient Wave Background Animation */}
+      <GradientWaveBackground />
       
       {/* Static Background Elements */}
       <div className="absolute inset-0 z-0">
