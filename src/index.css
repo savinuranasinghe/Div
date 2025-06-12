@@ -1405,3 +1405,126 @@
     background-position: 200px 100px;
   }
 }
+/* Add this to your src/index.css file */
+
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Enhanced fade-in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+/* Float animation for background elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Grid pattern fade utilities */
+.grid-seamless {
+  mask-image: radial-gradient(ellipse 80% 60% at center, black 40%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at center, black 40%, transparent 70%);
+}
+
+/* Edge blur utility for seamless blending */
+.edge-blur {
+  position: relative;
+  overflow: hidden;
+}
+
+.edge-blur::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--background)) 0%,
+    transparent 15%,
+    transparent 85%,
+    hsl(var(--background)) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.edge-blur::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    hsl(var(--background)) 0%,
+    transparent 15%,
+    transparent 85%,
+    hsl(var(--background)) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Subtle grid pattern utility */
+.bg-grid-subtle {
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center center;
+}
+
+/* Extra subtle grid for hero */
+.bg-grid-hero {
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: center center;
+  mask-image: radial-gradient(ellipse 70% 50% at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 50% at center, black 30%, transparent 70%);
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 768px) {
+  .bg-grid-hero {
+    background-size: 40px 40px;
+    opacity: 0.5;
+  }
+}
+
+/* Performance optimization for animations */
+.animate-float,
+.animate-pulse {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
