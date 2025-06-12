@@ -303,12 +303,37 @@ const NeuralNetworkBackground: React.FC = () => {
       }
     }
     
-    // Enhanced random movement with better distribution
+    // Enhanced random movement with edge preference
     if (Math.random() < 0.008) { // Slightly more frequent movement
       const padding = config.edgeBuffer;
-      // Ensure nodes can move to any part of the screen
-      node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
-      node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
+      
+      // 70% chance to move to edge areas, 30% to center
+      if (Math.random() < 0.7) {
+        // Move to edge areas
+        const edgeChoice = Math.floor(Math.random() * 4);
+        switch (edgeChoice) {
+          case 0: // Top edge
+            node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
+            node.targetY = padding + Math.random() * 100;
+            break;
+          case 1: // Bottom edge
+            node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
+            node.targetY = window.innerHeight - 100 - padding + Math.random() * 100;
+            break;
+          case 2: // Left edge
+            node.targetX = padding + Math.random() * 100;
+            node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
+            break;
+          case 3: // Right edge
+            node.targetX = window.innerWidth - 100 - padding + Math.random() * 100;
+            node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
+            break;
+        }
+      } else {
+        // Move to center areas (less frequently)
+        node.targetX = window.innerWidth * 0.3 + Math.random() * (window.innerWidth * 0.4);
+        node.targetY = window.innerHeight * 0.3 + Math.random() * (window.innerHeight * 0.4);
+      }
     }
   };
 
