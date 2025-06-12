@@ -1,11 +1,11 @@
-// src/components/home/HeroSection.tsx (Updated)
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import NeuralNetworkBackground from "./NeuralNetworkBackground"; // Replace the old background
+import NeuralNetworkBackground from "./NeuralNetworkBackground";
+import { GridBackground } from "./GridBackground";
 
-const HeroSection: React.FC = () => {
+const HeroSectionWithGrid: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
@@ -42,10 +42,15 @@ const HeroSection: React.FC = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-20">
-      {/* Neural Network Background Animation */}
-      <NeuralNetworkBackground />
+      {/* Grid Background Layer (z-1) */}
+      <GridBackground cellSize={60} opacity={0.15} animated={true} />
       
-      {/* Static Background Elements */}
+      {/* Neural Network Background (z-2) */}
+      <div className="absolute inset-0 z-[2]">
+        <NeuralNetworkBackground />
+      </div>
+      
+      {/* Your existing static background elements (z-0) */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-neon-blue/5 to-transparent opacity-30"></div>
         <div className="absolute top-1/4 left-1/4 w-48 md:w-96 h-48 md:h-96 bg-neon-blue/5 rounded-full blur-3xl animate-pulse"></div>
@@ -56,13 +61,14 @@ const HeroSection: React.FC = () => {
         <div className="absolute top-3/4 left-1/3 w-16 md:w-32 h-16 md:h-32 bg-electric-violet/4 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content (z-30) */}
       <div className="container mx-auto px-4 relative z-30 text-center">
         <h1 
           ref={titleRef}
           className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-6 md:mb-10 opacity-0 transition-opacity duration-700"
           style={{ 
-            lineHeight: "1.1"
+            lineHeight: "1.1",
+            textShadow: "0 0 20px rgba(0, 255, 255, 0.3)"
           }}
         >
           <span className="text-neon-blue block drop-shadow-lg">
@@ -102,4 +108,4 @@ const HeroSection: React.FC = () => {
   );
 };
 
-export default HeroSection;
+export default HeroSectionWithGrid;
