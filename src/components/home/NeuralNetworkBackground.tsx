@@ -53,16 +53,18 @@ const NeuralNetworkBackground: React.FC = () => {
   // Only cyan color as requested
   const COLORS = ['#00FFFF']; // Only Cyan
   
-  // Fast, dynamic configuration for quick disappearing lines
+  // Enhanced configuration for more nodes everywhere
   const getConfig = () => ({
-    maxNodes: isMobileRef.current ? 80 : 120, // Keep density
-    maxConnections: isMobileRef.current ? 200 : 400, // Keep connections
-    connectionDistance: isMobileRef.current ? 250 : 350, // Keep range
-    nodeSpawnRate: isMobileRef.current ? 0.3 : 0.4, // Much faster spawning
-    nodeLifetime: isMobileRef.current ? 2000 : 3000, // Very short lifetime (2-3 seconds)
-    nodeSpeed: isMobileRef.current ? 1.5 : 2.0, // Much faster movement
-    edgeBuffer: 30, // Keep coverage
-    particleSpawnRate: 0, // No particles
+    maxNodes: isMobileRef.current ? 35 : 60, // Much more nodes
+    maxConnections: isMobileRef.current ? 30 : 50, // Moderate connections
+    connectionDistance: isMobileRef.current ? 180 : 220, // Moderate connection range
+    nodeSpawnRate: isMobileRef.current ? 0.06 : 0.1, // Faster spawning
+    nodeLifetime: isMobileRef.current ? 12000 : 18000, // Longer lifetime
+    particleSpawnRate: 0, // NO PARTICLES as requested
+    maxParticlesPerConnection: 0, // NO PARTICLES
+    nodeSpeed: 0.5,
+    particleSpeed: 0.02,
+    edgeBuffer: 30, // Small buffer to use more screen space
   });
 
   // Handle window resize
@@ -74,36 +76,51 @@ const NeuralNetworkBackground: React.FC = () => {
       });
       isMobileRef.current = window.innerWidth < 768;
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Create invisible node (for connection points only)
+  // Create a new node with edge-prioritized distribution
   const createNode = (width: number, height: number, currentTime: number): Node => {
-    const padding = getConfig().edgeBuffer;
+    const config = getConfig();
+    const padding = config.edgeBuffer;
     
-    // Distribute nodes more evenly across the entire screen
+    // Edge zones with higher probability
     const edgeZones = [
-      { x: padding, y: padding, w: width - 2 * padding, h: 80, weight: 2 },
-      { x: padding, y: height - 80 - padding, w: width - 2 * padding, h: 80, weight: 2 },
-      { x: padding, y: height * 0.2, w: 80, h: height * 0.6, weight: 2 },
-      { x: width - 80 - padding, y: height * 0.2, w: 80, h: height * 0.6, weight: 2 },
+      // Top edge strip
+      { x: padding, y: padding, w: width - 2 * padding, h: 80, weight: 3 },
+      // Bottom edge strip
+      { x: padding, y: height - 80 - padding, w: width - 2 * padding, h: 80, weight: 3 },
+      // Left edge strip
+      { x: padding, y: padding + 80, w: 80, h: height - 160 - 2 * padding, weight: 3 },
+      // Right edge strip
+      { x: width - 80 - padding, y: padding + 80, w: 80, h: height - 160 - 2 * padding, weight: 3 },
+      
+      // Corner zones (extra priority)
+      { x: padding, y: padding, w: 120, h: 120, weight: 4 },
+      { x: width - 120 - padding, y: padding, w: 120, h: 120, weight: 4 },
+      { x: padding, y: height - 120 - padding, w: 120, h: 120, weight: 4 },
+      { x: width - 120 - padding, y: height - 120 - padding, w: 120, h: 120, weight: 4 },
+      
+      // Mid-edge zones
+      { x: width * 0.3, y: padding, w: width * 0.4, h: 60, weight: 2 },
+      { x: width * 0.3, y: height - 60 - padding, w: width * 0.4, h: 60, weight: 2 },
+      { x: padding, y: height * 0.3, w: 60, h: height * 0.4, weight: 2 },
+      { x: width - 60 - padding, y: height * 0.3, w: 60, h: height * 0.4, weight: 2 },
     ];
     
-    // More center zones for better coverage
+    // Center zones with lower probability
     const centerZones = [
-      { x: width * 0.1, y: height * 0.1, w: width * 0.8, h: height * 0.8, weight: 3 },
-      { x: width * 0.15, y: height * 0.15, w: width * 0.7, h: height * 0.7, weight: 2 },
-      { x: width * 0.2, y: height * 0.2, w: width * 0.6, h: height * 0.6, weight: 2 },
-      { x: width * 0.25, y: height * 0.25, w: width * 0.5, h: height * 0.5, weight: 1 },
+      { x: width * 0.2, y: height * 0.2, w: width * 0.6, h: height * 0.6, weight: 1 },
+      { x: width * 0.25, y: height * 0.25, w: width * 0.5, h: height * 0.5, weight: 0.5 },
     ];
     
     // Combine all zones
     const allZones = [...edgeZones, ...centerZones];
     
     // Create weighted selection array
-    const weightedZones: any[] = [];
+    const weightedZones = [];
     allZones.forEach(zone => {
       for (let i = 0; i < zone.weight * 10; i++) {
         weightedZones.push(zone);
@@ -121,7 +138,7 @@ const NeuralNetworkBackground: React.FC = () => {
       y,
       targetX: x,
       targetY: y,
-      size: 3 + Math.random() * 4, // Keep original sizes (but won't be drawn)
+      size: 3 + Math.random() * 4, // Keep original sizes
       opacity: 0,
       targetOpacity: 0.6 + Math.random() * 0.4,
       color: COLORS[0], // Always cyan
@@ -133,75 +150,101 @@ const NeuralNetworkBackground: React.FC = () => {
     };
   };
 
-  // Update connections between nodes
+  // Create a data particle (unused but keeping for compatibility)
+  const createDataParticle = (fromNode: Node, toNode: Node): DataParticle => {
+    return {
+      id: nextParticleIdRef.current++,
+      progress: 0,
+      speed: 0.01 + Math.random() * 0.02,
+      size: 1 + Math.random() * 2,
+      opacity: 0.7 + Math.random() * 0.3,
+      color: COLORS[0], // Always cyan
+      fromNode: fromNode.id,
+      toNode: toNode.id,
+    };
+  };
+
+  // Calculate distance between two points
+  const getDistance = (x1: number, y1: number, x2: number, y2: number): number => {
+    return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  };
+
+  // Update node connections
   const updateConnections = () => {
     const config = getConfig();
     connectionsRef.current = [];
     
-    const visibleNodes = nodesRef.current.filter(n => n.isVisible);
-    
-    for (let i = 0; i < visibleNodes.length; i++) {
-      for (let j = i + 1; j < visibleNodes.length; j++) {
-        const nodeA = visibleNodes[i];
-        const nodeB = visibleNodes[j];
+    for (let i = 0; i < nodesRef.current.length; i++) {
+      const nodeA = nodesRef.current[i];
+      if (!nodeA.isVisible) continue;
+      
+      for (let j = i + 1; j < nodesRef.current.length; j++) {
+        const nodeB = nodesRef.current[j];
+        if (!nodeB.isVisible) continue;
         
-        const distance = Math.sqrt(
-          Math.pow(nodeA.x - nodeB.x, 2) + Math.pow(nodeA.y - nodeB.y, 2)
-        );
+        const distance = getDistance(nodeA.x, nodeA.y, nodeB.x, nodeB.y);
         
         if (distance < config.connectionDistance) {
           const strength = 1 - (distance / config.connectionDistance);
-          const opacity = Math.min(nodeA.opacity, nodeB.opacity) * strength * 0.6; // Moderate opacity
+          const existingConnection = connectionsRef.current.find(
+            conn => (conn.from === nodeA.id && conn.to === nodeB.id) ||
+                   (conn.from === nodeB.id && conn.to === nodeA.id)
+          );
           
-          connectionsRef.current.push({
-            from: nodeA.id,
-            to: nodeB.id,
-            strength,
-            opacity: Math.max(opacity, 0.1), // Lower minimum for quicker fade
-            particles: [],
-          });
+          if (!existingConnection) {
+            connectionsRef.current.push({
+              from: nodeA.id,
+              to: nodeB.id,
+              strength,
+              opacity: strength * 0.35, // Slightly higher opacity for better visibility
+              particles: [], // No particles
+            });
+          }
         }
       }
     }
     
     // Limit total connections
     if (connectionsRef.current.length > config.maxConnections) {
-      connectionsRef.current.sort((a, b) => b.strength - a.strength);
-      connectionsRef.current = connectionsRef.current.slice(0, config.maxConnections);
+      connectionsRef.current = connectionsRef.current
+        .sort((a, b) => b.strength - a.strength)
+        .slice(0, config.maxConnections);
     }
   };
 
-  // Update node properties with better movement distribution
-  const updateNode = (node: Node, currentTime: number, config: any) => {
-    // Smooth movement towards target (faster)
-    node.x += (node.targetX - node.x) * config.nodeSpeed * 0.05; // Faster movement
-    node.y += (node.targetY - node.y) * config.nodeSpeed * 0.05;
+  // Draw a node with cyan glow effect
+  const drawNode = (ctx: CanvasRenderingContext2D, node: Node, currentTime: number) => {
+    if (!node.isVisible || node.opacity <= 0) return;
+
+    // Pulsing effect
+    const pulseValue = Math.sin(currentTime * 0.002 + node.pulsePhase) * 0.3 + 0.7;
+    const finalSize = node.size * pulseValue;
+
+    ctx.save();
+    ctx.globalAlpha = node.opacity;
     
-    // Faster opacity transitions
-    node.opacity += (node.targetOpacity - node.opacity) * 0.08; // Much faster fade
+    // Enhanced cyan glow effect
+    ctx.shadowBlur = 25;
+    ctx.shadowColor = COLORS[0];
+    ctx.fillStyle = COLORS[0];
     
-    // Age-based behavior - quick fade out
-    const age = currentTime - node.spawnTime;
+    // Draw node
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, finalSize, 0, Math.PI * 2);
+    ctx.fill();
     
-    if (age > config.nodeLifetime * 0.5) { // Start fading much earlier
-      // Quick fade out
-      node.targetOpacity = 0;
-      if (node.opacity < 0.05) { // Higher threshold for quicker removal
-        node.isVisible = false;
-      }
-    }
+    // Inner bright core
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = node.opacity * 0.8;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, finalSize * 0.4, 0, Math.PI * 2);
+    ctx.fill();
     
-    // Much more frequent movement for dynamic effect
-    if (Math.random() < 0.02) { // Much more frequent movement
-      const padding = config.edgeBuffer;
-      
-      // Quick random movement across entire screen
-      node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
-      node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
-    }
+    ctx.restore();
   };
 
-  // Draw connection line with cyan color (NO NODES DRAWN)
+  // Draw connection line with cyan color
   const drawConnection = (ctx: CanvasRenderingContext2D, connection: Connection) => {
     const fromNode = nodesRef.current.find(n => n.id === connection.from);
     const toNode = nodesRef.current.find(n => n.id === connection.to);
@@ -211,10 +254,10 @@ const NeuralNetworkBackground: React.FC = () => {
     ctx.save();
     ctx.globalAlpha = connection.opacity;
     
-    // Enhanced cyan line with more visible glow
+    // Simple cyan line (no gradient since all nodes are cyan)
     ctx.strokeStyle = COLORS[0];
-    ctx.lineWidth = 1.5; // Slightly thicker lines
-    ctx.shadowBlur = 8; // More glow
+    ctx.lineWidth = 1.2;
+    ctx.shadowBlur = 6;
     ctx.shadowColor = COLORS[0];
     
     ctx.beginPath();
@@ -222,13 +265,81 @@ const NeuralNetworkBackground: React.FC = () => {
     ctx.lineTo(toNode.x, toNode.y);
     ctx.stroke();
     
-    // Add a second pass for extra glow
-    ctx.globalAlpha = connection.opacity * 0.3;
-    ctx.shadowBlur = 15;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    
     ctx.restore();
+  };
+
+  // Draw data particle (unused but keeping for compatibility)
+  const drawDataParticle = (ctx: CanvasRenderingContext2D, particle: DataParticle) => {
+    // Not used since particles are disabled
+  };
+
+  // Utility function to convert hex to RGB (keeping for compatibility)
+  const hexToRgb = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 0, g: 0, b: 0 };
+  };
+
+  // Update node properties with better movement distribution
+  const updateNode = (node: Node, currentTime: number, config: any) => {
+    // Smooth movement towards target
+    node.x += (node.targetX - node.x) * config.nodeSpeed * 0.02;
+    node.y += (node.targetY - node.y) * config.nodeSpeed * 0.02;
+    
+    // Smooth opacity transitions
+    node.opacity += (node.targetOpacity - node.opacity) * 0.02;
+    
+    // Age-based behavior
+    const age = currentTime - node.spawnTime;
+    
+    if (age > config.nodeLifetime * 0.8) {
+      // Start fading out
+      node.targetOpacity = 0;
+      if (node.opacity < 0.01) {
+        node.isVisible = false;
+      }
+    }
+    
+    // Enhanced random movement with edge preference
+    if (Math.random() < 0.008) { // Slightly more frequent movement
+      const padding = config.edgeBuffer;
+      
+      // 70% chance to move to edge areas, 30% to center
+      if (Math.random() < 0.7) {
+        // Move to edge areas
+        const edgeChoice = Math.floor(Math.random() * 4);
+        switch (edgeChoice) {
+          case 0: // Top edge
+            node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
+            node.targetY = padding + Math.random() * 100;
+            break;
+          case 1: // Bottom edge
+            node.targetX = padding + Math.random() * (window.innerWidth - 2 * padding);
+            node.targetY = window.innerHeight - 100 - padding + Math.random() * 100;
+            break;
+          case 2: // Left edge
+            node.targetX = padding + Math.random() * 100;
+            node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
+            break;
+          case 3: // Right edge
+            node.targetX = window.innerWidth - 100 - padding + Math.random() * 100;
+            node.targetY = padding + Math.random() * (window.innerHeight - 2 * padding);
+            break;
+        }
+      } else {
+        // Move to center areas (less frequently)
+        node.targetX = window.innerWidth * 0.3 + Math.random() * (window.innerWidth * 0.4);
+        node.targetY = window.innerHeight * 0.3 + Math.random() * (window.innerHeight * 0.4);
+      }
+    }
+  };
+
+  // Update data particles (unused but keeping for compatibility)
+  const updateDataParticles = (connection: Connection, config: any) => {
+    // Particles are disabled, so this does nothing
   };
 
   // Main animation setup
@@ -250,13 +361,13 @@ const NeuralNetworkBackground: React.FC = () => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Spawn new nodes more frequently (invisible connection points)
+      // Spawn new nodes more frequently
       const visibleNodes = nodesRef.current.filter(n => n.isVisible).length;
       if (Math.random() < config.nodeSpawnRate && visibleNodes < config.maxNodes) {
         nodesRef.current.push(createNode(canvas.width, canvas.height, currentTime));
       }
 
-      // Update nodes (invisible - just for connection calculations)
+      // Update nodes
       nodesRef.current.forEach(node => {
         if (node.isVisible) {
           updateNode(node, currentTime, config);
@@ -271,12 +382,15 @@ const NeuralNetworkBackground: React.FC = () => {
       // Update connections
       updateConnections();
 
-      // Draw ONLY connections (no nodes)
+      // Draw connections (no particles)
       connectionsRef.current.forEach(connection => {
         drawConnection(ctx, connection);
       });
 
-      // NOTE: Nodes are NOT drawn anymore - only connections
+      // Draw nodes
+      nodesRef.current.forEach(node => {
+        drawNode(ctx, node, currentTime);
+      });
 
       animationRef.current = requestAnimationFrame(animate);
     };
